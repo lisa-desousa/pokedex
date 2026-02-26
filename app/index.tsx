@@ -1,32 +1,12 @@
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-
-export const colorsByType = {
-  normal: "#A8A77A",
-  fire: "#EE8130",
-  water: "#6390F0",
-  electric: "#F7D02C",
-  grass: "#7AC74C",
-  ice: "#96D9D6",
-  fighting: "#C22E28",
-  poison: "#A33EA1",
-  ground: "#E2BF65",
-  flying: "#A98FF3",
-  psychic: "#F95587",
-  bug: "#A6B91A",
-  rock: "#B6A136",
-  ghost: "#735797",
-  dragon: "#6F35FC",
-  dark: "#705746",
-  steel: "#B7B7CE",
-  fairy: "#D685AD",
-};
+import { getPokemonTypeColor } from "./colorsByType";
 
 interface Pokemon {
+  id: number;
   name: string;
   image: string;
-  imageBack: string;
   types: PokemonType[];
 }
 
@@ -57,9 +37,9 @@ export default function Index() {
           const res = await fetch(pokemon.url);
           const details = await res.json();
           return {
+            id: details.id,
             name: pokemon.name,
-            image: details.sprites.front_default,
-            imageBack: details.sprites.back_default,
+            image: details.sprites.other["official-artwork"].front_default,
             types: details.types,
           };
         }),
@@ -74,34 +54,37 @@ export default function Index() {
   return (
     <ScrollView
       contentContainerStyle={{
-        gap: 16,
+        gap: 12,
         padding: 16,
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "space-between",
       }}
     >
       {pokemons.map((pokemon) => (
         <Link
           key={pokemon.name}
           href={{ pathname: "/details", params: { name: pokemon.name } }}
-          style={{
-            // @ts-ignore
-            backgroundColor: colorsByType[pokemon.types[0].type.name] + 50,
-            padding: 20,
-            borderRadius: 20,
-          }}
+          asChild //View blir klickbar istället, stylingen på Link funkade inte som jag ville
         >
-          <View>
+          <View
+            style={{
+              backgroundColor:
+                getPokemonTypeColor(pokemon.types[0].type.name) + "50",
+              padding: 20,
+              borderRadius: 20,
+              width: "48%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Image
+              source={{ uri: pokemon.image }}
+              style={{ width: 100, height: 100 }}
+            ></Image>
             <Text style={styles.name}>{pokemon.name}</Text>
-            <Text style={styles.type}>{pokemon.types[0].type.name}</Text>
-            <View style={{ flexDirection: "row" }}>
-              <Image
-                source={{ uri: pokemon.image }}
-                style={{ width: 150, height: 150 }}
-              ></Image>
-              <Image
-                source={{ uri: pokemon.imageBack }}
-                style={{ width: 150, height: 150 }}
-              ></Image>
-            </View>
+            <Text>00{pokemon.id}</Text>{" "}
+            {/* Här kan man göra en funkton som lägger till 0:or framför endast när det behövs... tex pokemon med id 189 behöver ju inte ha 00 innan */}
           </View>
         </Link>
       ))}
@@ -111,7 +94,7 @@ export default function Index() {
 
 const styles = StyleSheet.create({
   name: {
-    fontSize: 28,
+    fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
     textTransform: "capitalize",

@@ -1,58 +1,7 @@
-// import { Stack, useLocalSearchParams } from "expo-router";
-// import { useEffect } from "react";
-// import { ScrollView, StyleSheet, Text } from "react-native";
-
-// export default function Details() {
-//   const params = useLocalSearchParams();
-
-//   useEffect(() => {
-//     fetchPokemonByName(params.name as string);
-//   }, [params.name]);
-
-//   async function fetchPokemonByName(name: string) {
-//     try {
-//       const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-//       const data = await response.json();
-
-//       return {
-//         name: data.name,
-//         image: data.sprites.front_default,
-//         imageBack: data.sprites.back_default,
-//         types: data.types,
-//       };
-//     } catch (e) {
-//       console.log(e);
-//     }
-//   }
-
-//   return (
-//     <>
-//       <Stack.Screen options={{ title: params.name as string }} />
-//       <ScrollView
-//         contentContainerStyle={{
-//           gap: 16,
-//           padding: 16,
-//         }}
-//       >
-//         <Text style={styles.name}>{params.name}</Text>
-//       </ScrollView>
-//     </>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   name: {
-//     fontSize: 28,
-//     fontWeight: "bold",
-//     textAlign: "center",
-//   },
-
-//   type: {},
-// });
-
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { getPokemonTypeColor } from "./colorsByType";
 
 interface Pokemon {
   id: number;
@@ -74,12 +23,11 @@ export default function Details() {
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
 
   useEffect(() => {
+    //fetch pokemon och sätt i state
     fetchPokemonDetails(params.name as string).then(setPokemon);
   }, [params.name]);
 
-  // --------------------
   // Fetch function
-  // --------------------
   async function fetchPokemonDetails(name: string): Promise<Pokemon> {
     // 1. Pokémon data
     const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
@@ -97,7 +45,7 @@ export default function Details() {
     return {
       id: data.id,
       name: data.name,
-      image: data.sprites.other["showdown"].front_default,
+      image: data.sprites.other["official-artwork"].front_default,
       types: data.types.map((t: any) => t.type.name),
       abilities: data.abilities.map((a: any) => a.ability.name),
       stats: data.stats.map((s: any) => ({
@@ -112,12 +60,23 @@ export default function Details() {
 
   return (
     <>
-
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.name}>{pokemon.name}</Text>
+        <Text style={{ textAlign: "center", fontSize: 20 }}>
+          00{pokemon.id}
+        </Text>
 
         {pokemon.image && (
-          <Image source={{ uri: pokemon.image }} style={styles.image} />
+          <View
+            style={{
+              backgroundColor: getPokemonTypeColor(pokemon.types[0]) + "50",
+              borderRadius: 20,
+              padding: 30,
+              marginHorizontal: 10,
+            }}
+          >
+            <Image source={{ uri: pokemon.image }} style={styles.image} />
+          </View>
         )}
 
         <View style={styles.section}>
@@ -160,7 +119,7 @@ export default function Details() {
 
 const styles = StyleSheet.create({
   container: {
-    gap: 20,
+    gap: 15,
     padding: 16,
   },
   name: {
@@ -168,6 +127,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     textTransform: "capitalize",
+    marginBottom: -10,
   },
   image: {
     width: "100%",
