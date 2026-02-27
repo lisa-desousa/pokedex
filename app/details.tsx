@@ -1,7 +1,7 @@
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import { getPokemonTypeColor } from "./colorsByType";
+import getPokemonTypeColor from "./colorsByType";
 
 interface Pokemon {
   id: number;
@@ -41,7 +41,7 @@ export default function Details() {
       (entry: any) => entry.language.name === "en",
     )?.flavor_text;
 
-    // Vi returnerar direkt enligt vårt interface
+    // Return enligt interface
     return {
       id: data.id,
       name: data.name,
@@ -62,9 +62,7 @@ export default function Details() {
     <>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.name}>{pokemon.name}</Text>
-        <Text style={{ textAlign: "center", fontSize: 20 }}>
-          00{pokemon.id}
-        </Text>
+        <Text style={{ textAlign: "center", fontSize: 20 }}>#{pokemon.id}</Text>
 
         {pokemon.image && (
           <View

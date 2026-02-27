@@ -1,4 +1,4 @@
-export const pokemonTypeColors: Record<string, string> = {
+const pokemonTypeColors: Record<string, string> = {
   normal: "#A8A77A",
   fire: "#EE8130",
   water: "#6390F0",
@@ -20,6 +20,6 @@ export const pokemonTypeColors: Record<string, string> = {
 };
 
 // Funktion som hämtar färg baserat på typ
-export function getPokemonTypeColor(type: string): string {
+export default function getPokemonTypeColor(type: string): string {
   return pokemonTypeColors[type.toLowerCase()] ?? "#777"; // fallback
 }
