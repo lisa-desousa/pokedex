@@ -8,7 +8,7 @@ interface SearchBarProps {
 export default function SearchBar({ value, onChangeText }: SearchBarProps) {
   return (
     <TextInput
-      placeholder="Search Pokémon..."
+      placeholder="Search for Pokémon by name or id..."
       placeholderTextColor="#4a4a4a"
       value={value}
       onChangeText={onChangeText}

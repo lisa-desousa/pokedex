@@ -1,5 +1,5 @@
 import { PokemonApi, PokemonSpeciesApi } from "../types/pokemonApiTypes";
-import { Pokemon } from "../types/pokemonTypes";
+import { Pokemon, PokemonName } from "../types/pokemonTypes";
 
 // Detaljerad data för en specifik pokemon (för details-sidan)
 export async function fetchPokemonDetails(name: string): Promise<Pokemon> {
@@ -30,11 +30,17 @@ export async function fetchPokemonDetails(name: string): Promise<Pokemon> {
   };
 }
 
-//Hämtar namn på alla Pokemons (för sök)
-export async function fetchAllPokemonNames(): Promise<string[]> {
+//Hämtar namn + id på alla Pokemons (för sök)
+export async function fetchAllPokemonNames(): Promise<PokemonName[]> {
   const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=2000");
   const data = await res.json();
-  return data.results.map((p: { name: string }) => p.name);
+
+  return data.results.map(
+    (p: { name: string }, index: number): PokemonName => ({
+      name: p.name,
+      id: index + 1,
+    }),
+  );
 }
 
 //Hämta första 50 Pokemon med all data (för grid)

@@ -2,11 +2,11 @@ import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
-import Section from "./components/Section";
-import TypeBadge from "./components/TypeBadge";
-import { Pokemon } from "./types/pokemonTypes";
-import { fetchPokemonDetails } from "./utils/api";
-import getPokemonTypeColor from "./utils/colorsByType";
+import Section from "../components/Section";
+import TypeBadge from "../components/TypeBadge";
+import { Pokemon } from "../types/pokemonTypes";
+import { fetchPokemonDetails } from "../utils/api";
+import getPokemonTypeColor from "../utils/colorsByType";
 
 interface PokemonStat {
   name: string;

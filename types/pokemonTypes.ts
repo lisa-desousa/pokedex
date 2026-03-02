@@ -11,3 +11,9 @@ export interface Pokemon {
   }[];
   description: string;
 }
+
+// För sök-funktionen behöver vi bara namn + id (för att visa i dropdown)
+export interface PokemonName {
+  name: string;
+  id: number;
+}

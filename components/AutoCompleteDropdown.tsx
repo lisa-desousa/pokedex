@@ -1,29 +1,29 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { PokemonName } from "../types/pokemonTypes";
 
 interface AutoCompleteDropdownProps {
-  names: string[];
+  pokemons: PokemonName[];
   visible: boolean;
   onSelect: (name: string) => void;
 }
 
 export default function AutoCompleteDropdown({
-  names,
+  pokemons,
   visible,
   onSelect,
 }: AutoCompleteDropdownProps) {
   if (!visible) return null;
 
+  //slice visar endast första 10 resultaten
   return (
     <View style={styles.dropdown}>
-      {names.slice(0, 10).map(
-        (
-          name, //slice visar endast första 10 resultaten
-        ) => (
-          <Pressable key={name} onPress={() => onSelect(name)}>
-            <Text style={styles.resultItem}>{name}</Text>
-          </Pressable>
-        ),
-      )}
+      {pokemons.slice(0, 10).map((p) => (
+        <Pressable key={p.id} onPress={() => onSelect(p.name)}>
+          <Text style={styles.resultItem}>
+            #{p.id} - {p.name}
+          </Text>
+        </Pressable>
+      ))}
     </View>
   );
 }

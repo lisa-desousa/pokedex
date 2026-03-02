@@ -1,4 +1,4 @@
-import { Pressable, Image, Text, StyleSheet } from "react-native";
+import { Image, Pressable, StyleSheet, Text } from "react-native";
 import { Pokemon } from "../types/pokemonTypes";
 import getPokemonTypeColor from "../utils/colorsByType";
 

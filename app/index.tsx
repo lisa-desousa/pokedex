@@ -2,18 +2,19 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 
-import type { Pokemon } from "./types/pokemonTypes";
+import type { Pokemon } from "../types/pokemonTypes";
 
-import { fetchAllPokemonNames, fetchPokemons } from "./utils/api";
-import SearchBar from "./components/SearchBar";
-import AutoCompleteDropdown from "./components/AutoCompleteDropdown";
-import PokemonGrid from "./components/PokemonGrid";
+import AutoCompleteDropdown from "../components/AutoCompleteDropdown";
+import PokemonGrid from "../components/PokemonGrid";
+import SearchBar from "../components/SearchBar";
+import { PokemonName } from "../types/pokemonTypes";
+import { fetchAllPokemonNames, fetchPokemons } from "../utils/api";
 
 export default function Index() {
   const router = useRouter();
 
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
-  const [allNames, setAllNames] = useState<string[]>([]);
+  const [allNames, setAllNames] = useState<PokemonName[]>([]);
   const [search, setSearch] = useState("");
 
   // Hämta alla namn för sök
@@ -36,10 +37,11 @@ export default function Index() {
 
   // undvika att search blir undefined
   const normalizedSearch = (search ?? "").toLowerCase();
-  const matchingNames = allNames.filter(
-    (name) =>
-      typeof name === "string" && name.toLowerCase().includes(normalizedSearch),
-  );
+
+  const matchingPokemons = allNames.filter((p) => {
+    const s = normalizedSearch;
+    return p.name.toLowerCase().includes(s) || p.id.toString().includes(s);
+  });
 
   return (
     <View style={{ flex: 1 }}>
@@ -48,7 +50,7 @@ export default function Index() {
 
       {/* Autocomplete dropdown */}
       <AutoCompleteDropdown
-        names={matchingNames}
+        pokemons={matchingPokemons}
         visible={search.length > 0}
         onSelect={(name) =>
           router.push({ pathname: "/details", params: { name } })
